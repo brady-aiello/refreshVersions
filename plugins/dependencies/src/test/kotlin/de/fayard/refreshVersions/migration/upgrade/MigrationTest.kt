@@ -2,11 +2,14 @@ package de.fayard.refreshVersions.migration.upgrade
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.inspectors.forAll
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.ints.shouldBeExactly
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
+import java.io.File
 
 class MigrationTest : StringSpec({
+    val testResources: File = File(".").absoluteFile.resolve("src/test/resources")
 
     "Ignore lines that do not contain version" {
         val lines = """
@@ -73,6 +76,20 @@ class MigrationTest : StringSpec({
             }
     }
 
+    "Search for files that may contain dependency notations" {
+        val expected = """
+            buildSrc/src/main/kotlin/Dependencies.kt
+            buildSrc/src/main/kotlin/Libs.kt
+            buildSrc/src/main/kotlin/my/package/Deps.kt
+            deps.gradle
+            gradle/dependencies.gradle
+            gradle/libraries.gradle
+            libraries.groovy
+            libs.gradle
+        """.trimIndent().lines()
+        val dir = testResources.resolve("migration.files")
+        findFilesWithDependencyNotations(dir) shouldContainExactlyInAnyOrder expected.map { dir.resolve(it) }
+    }
 })
 
 
@@ -83,4 +100,13 @@ val underscoreRegex =
 fun replaceVersionWithUndercore(line: String): String? = when {
     underscoreRegex.containsMatchIn(line) -> line.replace(underscoreRegex, "\$1_\$2")
     else -> null
+}
+
+fun findFilesWithDependencyNotations(fromDir: File): List<File> {
+    require(fromDir.isDirectory()) { "Expected a directory, got ${fromDir.absolutePath}" }
+    val expectedNames = listOf("deps", "dependencies", "libs", "libraries")
+    val expectedExtesions = listOf("kt", "gradle", "groovy")
+    return fromDir.walkBottomUp()
+        .filter { it.extension in expectedExtesions && it.nameWithoutExtension.toLowerCase() in expectedNames }
+        .toList()
 }
