@@ -2,11 +2,13 @@ package de.fayard.refreshVersions.rules
 
 import AndroidX
 import COIL
+import Google
 import KotlinX
 import Ktor
 import Orchid
 import Splitties
 import Testing
+import de.fayard.refreshVersions.core.internal.DependencyGroup
 import de.fayard.refreshVersions.internal.getArtifactsFromDependenciesObject
 import dependencies.DependencyNotationAndGroup
 import org.gradle.api.artifacts.ModuleIdentifier
@@ -290,13 +292,19 @@ private val testing = listOf(
     }
 )
 
-internal val bundledRules = kotlinX + androidX + google + testing + listOf(
-    versionKeyWithModules(expected = "ktor", dependenciesObject = Ktor),
-    versionKeyWithModules(expected = "splitties", dependenciesObject = Splitties),
-    versionKeyWithModules(expected = "coil-kt", dependenciesObject = COIL),
-    versionKeyWithModules(expected = "orchid", dependenciesObject = Orchid),
-    versionKeyWithModules(expected = "kodein.kp", dependenciesObject = Kodein.di)
-)
+
+internal val dependencyGroups
+    get() = DependencyGroup.ALL.map {
+        versionKeyWithModules(expected = it.expectedKey, dependenciesObject = it)
+    }
+
+internal val bundledRules
+    get() = dependencyGroups + kotlinX + androidX + google + testing + listOf(
+        versionKeyWithModules(expected = "ktor", dependenciesObject = Ktor),
+        versionKeyWithModules(expected = "splitties", dependenciesObject = Splitties),
+        versionKeyWithModules(expected = "coil-kt", dependenciesObject = COIL),
+        versionKeyWithModules(expected = "orchid", dependenciesObject = Orchid)
+    )
 
 
 @Suppress("conflicting_overloads")

@@ -1,7 +1,7 @@
 @file:Suppress("PackageDirectoryMismatch", "SpellCheckingInspection", "unused")
 
 import de.fayard.refreshVersions.core.internal.ArtifactVersionKeyRule
-import dependencies.DependencyGroup
+import de.fayard.refreshVersions.core.internal.DependencyGroup
 import org.gradle.api.Incubating
 
 /**
@@ -15,10 +15,12 @@ import org.gradle.api.Incubating
 @Incubating
 object Kodein {
 
-    private var useBom = false
-    val bom: String get() = "org.kodein.di:kodein-bom:_".also { useBom = true }
+    private var usePlatformConstraints = false
+    val bom: String
+        get() = "org.kodein.di:kodein-bom:_"
+            .also { usePlatformConstraints = true }
 
-    val di by lazy { DI(useBom) }
+    val di = DI(usePlatformConstraints = false)
 
     class DI(usePlatformConstraints: Boolean) : DependencyGroup(
         group = "org.kodein.di",
@@ -26,17 +28,27 @@ object Kodein {
         rule = ArtifactVersionKeyRule(
             artifactPattern = "  org.kodein.di:kodein-di(-*)",
             versionKeyPattern = "    ^^^^^^^^^              "
-        )
+        ),
+        expectedKey = "kodein.di"
     ) {
-        val androidCore = module("kodein-di-framework-android-core")
-        val androidSupport = module("kodein-di-framework-android-support")
-        val androidx = module("kodein-di-framework-android-x")
-        val configurableJS = module("kodein-di-conf-js")
-        val configurableJvm = module("kodein-di-conf-jvm")
-        val js = module("kodein-di-js")
-        val jsr330 = module("kodein-di-jxinject-jvm")
-        val ktor = module("kodein-di-framework-ktor-server-jvm")
-        val tornadofx = module("kodein-di-framework-tornadofx-jvm")
+        val androidCore
+            get() = module("kodein-di-framework-android-core")
+        val androidSupport
+            get() = module("kodein-di-framework-android-support")
+        val androidx
+            get() = module("kodein-di-framework-android-x")
+        val configurableJS
+            get() = module("kodein-di-conf-js")
+        val configurableJvm
+            get() = module("kodein-di-conf-jvm")
+        val js
+            get() = module("kodein-di-js")
+        val jsr330
+            get() = module("kodein-di-jxinject-jvm")
+        val ktor
+            get() = module("kodein-di-framework-ktor-server-jvm")
+        val tornadofx
+            get() = module("kodein-di-framework-tornadofx-jvm")
     }
 }
 

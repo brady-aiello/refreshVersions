@@ -47,6 +47,9 @@ dependencies {
 
     api("org.apache.poi:poi:_")
     api("org.apache.poi:poi-ooxml:_")
+    implementation(Kodein.di.configurableJvm)
+    implementation(Kodein.di.jsr330)
+
 }
 
 getKotlinPluginVersion().let {

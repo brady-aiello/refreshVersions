@@ -1,19 +1,22 @@
-package dependencies
+package de.fayard.refreshVersions.core.internal
 
-import de.fayard.refreshVersions.core.internal.ArtifactVersionKeyRule
 import org.gradle.kotlin.dsl.IsNotADependency
 
+@InternalRefreshVersionsApi
 open class DependencyGroup(
     val group: String,
     val rule: ArtifactVersionKeyRule? = null,
-    val usePlatformConstraints: Boolean = false
+    val usePlatformConstraints: Boolean = false,
+    val expectedKey: String
 ) : IsNotADependency {
     companion object {
-        val ALL_RULES = mutableListOf<ArtifactVersionKeyRule>() // FIXME: use it
+        val ALL = mutableListOf<DependencyGroup>()
+        val ALL_RULES: List<ArtifactVersionKeyRule>
+            get() = ALL.mapNotNull { it.rule }
     }
 
     init {
-        if (rule != null) ALL_RULES.add(rule)
+        ALL.add(this)
     }
 
     fun module(module: String): String {
