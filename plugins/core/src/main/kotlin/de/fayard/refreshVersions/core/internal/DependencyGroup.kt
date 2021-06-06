@@ -6,7 +6,7 @@ import org.gradle.kotlin.dsl.IsNotADependency
 open class DependencyGroup(
     val group: String,
     val rule: ArtifactVersionKeyRule? = null,
-    val usePlatformConstraints: Boolean = false,
+    var usePlatformConstraints: Boolean = false,
     val expectedKey: String
 ) : IsNotADependency {
     companion object {

@@ -15,10 +15,9 @@ import org.gradle.api.Incubating
 @Incubating
 object Kodein {
 
-    private var usePlatformConstraints = false
     val bom: String
         get() = "org.kodein.di:kodein-bom:_"
-            .also { usePlatformConstraints = true }
+            .also { di.usePlatformConstraints = true }
 
     val di = DI(usePlatformConstraints = false)
 

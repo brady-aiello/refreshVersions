@@ -1,18 +1,6 @@
 package de.fayard.refreshVersions.internal
 
-import AndroidX
-import COIL
-import CashApp
-import Firebase
-import Google
-import JakeWharton
-import Kodein
-import Kotlin
-import KotlinX
-import Ktor
-import Splitties
-import Square
-import Testing
+import dependencies.ALL_DEPENDENCIES_NOTATIONS
 import dependencies.DependencyNotationAndGroup
 import org.gradle.api.artifacts.ModuleIdentifier
 import java.lang.reflect.Field
@@ -45,21 +33,7 @@ internal data class DependencyMapping(
 }
 
 internal fun getArtifactNameToConstantMapping(excludeBomDependencies: Boolean = false): List<DependencyMapping> {
-    return sequenceOf(
-        AndroidX,
-        CashApp,
-        Google,
-        JakeWharton,
-        Firebase,
-        Kodein,
-        Kotlin,
-        KotlinX,
-        Splitties,
-        Square,
-        Ktor,
-        Testing,
-        COIL
-    ).flatMap { objectInstance ->
+    return ALL_DEPENDENCIES_NOTATIONS.asSequence().flatMap { objectInstance ->
         getArtifactNameToConstantMappingFromObject(
             objectInstance,
             excludeBomDependencies = excludeBomDependencies,

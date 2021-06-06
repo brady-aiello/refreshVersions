@@ -25,6 +25,11 @@ abstract class ArtifactVersionKeyRule protected constructor(
 
     private val versionKeySignificantCharsLength = versionKeyPattern.count { it != ' ' }
 
+    override fun toString(): String = """
+        $artifactPattern
+        $versionKeyPattern
+    """.trimIndent()
+
     companion object {
 
         operator fun invoke(
